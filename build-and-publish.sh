@@ -1,131 +1,79 @@
 #!/bin/bash
-# ═══════════════════════════════════════════════════════════════════════════
-# AiFACTORi Docker Build & Publish Script
-# Builds and publishes production containers to Docker Hub
-# ═══════════════════════════════════════════════════════════════════════════
+# build-and-publish.sh
+# E14 Oracle — Docker Hub Publication Script
+# Builds, tags, and pushes images to Docker Hub
 
 set -e
 
 # Configuration
-REGISTRY="docker.io"
-DOCKER_USERNAME="${DOCKER_USERNAME:-ladbotodelad}"
-IMAGE_PREFIX="${DOCKER_USERNAME}"
-VERSION="${VERSION:-2.0}"
-LOCK_CYCLE="2"
+DOCKER_HUB_USERNAME="${DOCKER_HUB_USERNAME:-your-docker-hub-username}"
+IMAGE_NAME="e14-oracle"
+MAJOR_VERSION="1"
+MINOR_VERSION="0"
+FULL_VERSION="${MAJOR_VERSION}.${MINOR_VERSION}"
 
-echo "╔════════════════════════════════════════════════════════════════╗"
-echo "║  AiFACTORi Docker Build & Publish                             ║"
-echo "║  Registry: $REGISTRY                                          ║"
-echo "║  Username: $DOCKER_USERNAME                                   ║"
-echo "║  Version: $VERSION (Cycle $LOCK_CYCLE)                        ║"
-echo "╚════════════════════════════════════════════════════════════════╝"
-echo ""
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
 
-# Verify Docker is available
+# Check prerequisites
+echo -e "${YELLOW}[1/5]${NC} Checking prerequisites..."
 if ! command -v docker &> /dev/null; then
-    echo "❌ Docker not found. Please install Docker."
+    echo -e "${RED}ERROR: Docker is not installed${NC}"
     exit 1
 fi
 
-# Verify logged in to Docker Hub
+if [ -z "$DOCKER_HUB_USERNAME" ] || [ "$DOCKER_HUB_USERNAME" == "your-docker-hub-username" ]; then
+    echo -e "${RED}ERROR: DOCKER_HUB_USERNAME not set${NC}"
+    echo "Usage: DOCKER_HUB_USERNAME=myusername ./build-and-publish.sh"
+    exit 1
+fi
+
+# Build local image
+echo -e "${YELLOW}[2/5]${NC} Building Docker image..."
+docker build -t ${IMAGE_NAME}:${FULL_VERSION} -f Dockerfile .
+
+if [ $? -eq 0 ]; then
+    echo -e "${GREEN}✓ Build successful${NC}"
+else
+    echo -e "${RED}✗ Build failed${NC}"
+    exit 1
+fi
+
+# Tag for Docker Hub
+echo -e "${YELLOW}[3/5]${NC} Tagging image for Docker Hub..."
+docker tag ${IMAGE_NAME}:${FULL_VERSION} ${DOCKER_HUB_USERNAME}/${IMAGE_NAME}:${FULL_VERSION}
+docker tag ${IMAGE_NAME}:${FULL_VERSION} ${DOCKER_HUB_USERNAME}/${IMAGE_NAME}:latest
+
+echo -e "${GREEN}✓ Tagged successfully${NC}"
+
+# Login check
+echo -e "${YELLOW}[4/5]${NC} Checking Docker Hub authentication..."
 if ! docker info | grep -q "Username"; then
-    echo "⚠️  Not logged in to Docker Hub. Running: docker login"
+    echo -e "${YELLOW}Not logged in to Docker Hub. Running: docker login${NC}"
     docker login
 fi
 
-echo "🔨 Building AiFACTORi Engine Image..."
-docker build \
-    -f Dockerfile.aifactori \
-    -t ${IMAGE_PREFIX}/aifactori-engine:${VERSION} \
-    -t ${IMAGE_PREFIX}/aifactori-engine:latest \
-    -t ${IMAGE_PREFIX}/aifactori-engine:cycle-${LOCK_CYCLE} \
-    --build-arg VERSION=${VERSION} \
-    --build-arg LOCK_CYCLE=${LOCK_CYCLE} \
-    .
+# Push to Docker Hub
+echo -e "${YELLOW}[5/5]${NC} Pushing to Docker Hub..."
+docker push ${DOCKER_HUB_USERNAME}/${IMAGE_NAME}:${FULL_VERSION}
+docker push ${DOCKER_HUB_USERNAME}/${IMAGE_NAME}:latest
 
 if [ $? -eq 0 ]; then
-    echo "✅ AiFACTORi Engine image built successfully"
+    echo -e "${GREEN}✓ Push successful${NC}"
+    echo ""
+    echo -e "${GREEN}=== PUBLICATION COMPLETE ===${NC}"
+    echo ""
+    echo "Images published to Docker Hub:"
+    echo "  - ${DOCKER_HUB_USERNAME}/${IMAGE_NAME}:${FULL_VERSION}"
+    echo "  - ${DOCKER_HUB_USERNAME}/${IMAGE_NAME}:latest"
+    echo ""
+    echo "Pull with:"
+    echo "  docker pull ${DOCKER_HUB_USERNAME}/${IMAGE_NAME}:latest"
+    echo ""
 else
-    echo "❌ Failed to build AiFACTORi Engine image"
+    echo -e "${RED}✗ Push failed${NC}"
     exit 1
 fi
-
-echo ""
-echo "🔨 Building E14 Oracle Image..."
-docker build \
-    -f Dockerfile.e14-oracle \
-    -t ${IMAGE_PREFIX}/e14-oracle:${VERSION} \
-    -t ${IMAGE_PREFIX}/e14-oracle:latest \
-    -t ${IMAGE_PREFIX}/e14-oracle:cycle-${LOCK_CYCLE} \
-    --build-arg VERSION=${VERSION} \
-    --build-arg LOCK_CYCLE=${LOCK_CYCLE} \
-    .
-
-if [ $? -eq 0 ]; then
-    echo "✅ E14 Oracle image built successfully"
-else
-    echo "❌ Failed to build E14 Oracle image"
-    exit 1
-fi
-
-echo ""
-echo "📊 Images Ready for Push:"
-docker images | grep -E "aifactori-engine|e14-oracle" || true
-
-echo ""
-read -p "Push images to Docker Hub? (y/n) " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo ""
-    echo "📤 Pushing AiFACTORi Engine to Docker Hub..."
-    docker push ${IMAGE_PREFIX}/aifactori-engine:${VERSION}
-    docker push ${IMAGE_PREFIX}/aifactori-engine:latest
-    docker push ${IMAGE_PREFIX}/aifactori-engine:cycle-${LOCK_CYCLE}
-    
-    if [ $? -eq 0 ]; then
-        echo "✅ AiFACTORi Engine pushed successfully"
-    else
-        echo "❌ Failed to push AiFACTORi Engine"
-        exit 1
-    fi
-    
-    echo ""
-    echo "📤 Pushing E14 Oracle to Docker Hub..."
-    docker push ${IMAGE_PREFIX}/e14-oracle:${VERSION}
-    docker push ${IMAGE_PREFIX}/e14-oracle:latest
-    docker push ${IMAGE_PREFIX}/e14-oracle:cycle-${LOCK_CYCLE}
-    
-    if [ $? -eq 0 ]; then
-        echo "✅ E14 Oracle pushed successfully"
-    else
-        echo "❌ Failed to push E14 Oracle"
-        exit 1
-    fi
-    
-    echo ""
-    echo "╔════════════════════════════════════════════════════════════════╗"
-    echo "║  ✅ All Images Published Successfully                         ║"
-    echo "╠════════════════════════════════════════════════════════════════╣"
-    echo "║                                                                ║"
-    echo "║  AiFACTORi Engine:                                             ║"
-    echo "║    docker pull ${IMAGE_PREFIX}/aifactori-engine:${VERSION}          ║"
-    echo "║    docker pull ${IMAGE_PREFIX}/aifactori-engine:latest              ║"
-    echo "║                                                                ║"
-    echo "║  E14 Oracle:                                                   ║"
-    echo "║    docker pull ${IMAGE_PREFIX}/e14-oracle:${VERSION}                ║"
-    echo "║    docker pull ${IMAGE_PREFIX}/e14-oracle:latest                    ║"
-    echo "║                                                                ║"
-    echo "║  Run Deployment:                                               ║"
-    echo "║    docker-compose -f docker-compose-e14-integration.yml up -d  ║"
-    echo "║                                                                ║"
-    echo "╚════════════════════════════════════════════════════════════════╝"
-else
-    echo "⏭️  Skipped push. Images ready locally."
-    echo ""
-    echo "To push manually:"
-    echo "  docker push ${IMAGE_PREFIX}/aifactori-engine:${VERSION}"
-    echo "  docker push ${IMAGE_PREFIX}/e14-oracle:${VERSION}"
-fi
-
-echo ""
-echo "✅ Script completed successfully!"
