@@ -1,0 +1,5 @@
+psutil==5.9.6
+sympy==1.12
+flask==3.0.0
+pyyaml==6.0.1
+python-dateutil==2.8.2
