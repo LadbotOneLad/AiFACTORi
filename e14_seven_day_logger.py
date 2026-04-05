@@ -23,7 +23,7 @@ MEMORY_MIN = 15
 DISK_MIN = 20
 WEATHER_MAX = 0.6
 
-ENGINES = [f"E{i:02d}" for i in range(1, 14)]
+ENGINES = [f"E{i:02d}" for i in range(1, 15)]
 
 # Log directory (use /app/logs for Docker, fallback to local)
 try:
