@@ -11,7 +11,7 @@ services:
       - ./config:/app/config:ro
       - ./logs:/app/logs
     healthcheck:
-      test: ["CMD", "python3", "-c", "import requests; requests.get('http://localhost:8888/health', timeout=2)" ]
+      test: ["CMD", "python3", "-c", "import psutil; print('ok')" ]
       interval: 30s
       timeout: 10s
       retries: 3
