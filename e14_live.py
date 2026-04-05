@@ -1,14 +1,13 @@
 """
-E14 ORACLE — PRODUCTION LIVE SYSTEM
-Real data sources + XYO verification + Byzantine consensus execution.
+E14 ORACLE — WITNESSED ATMOSPHERIC GRID
+Executes decisions based on cryptographically attested satellite tiles.
 
-Data pipeline:
-1. BOM IDR71B radar → real precipitation data
-2. Local sensors → environmental readings
-3. Sensor fusion → unified dataset
-4. XYO verification → cryptographic integrity check
-5. E14 phase convergence → K-value decision gates
-6. Execution → only with verified data + consensus
+Pipeline:
+1. Satellite frames (BOM, Himawari, GOES, Meteosat) → raw atmospheric data
+2. Sub-frame decomposition → regional tiles with pixel hashes
+3. XYO bound-witness mesh → distributed nodes anchor tiles to ledger
+4. E14 phase convergence → K-value operates on verified tiles
+5. Execution → only with witnessed atmospheric grid
 """
 
 import psutil
@@ -17,36 +16,34 @@ import json
 import logging
 from datetime import datetime
 from collections import deque
+from typing import List, Dict
 
-from bom_radar import BOMRadarIngestion, BOMRadarData
-from sensor_fusion import SensorFusion, LocalSensorArray, LocalSensor
-from xyo_data_verification import XYODataVerification
+from satellite_tiles import SatelliteTileDecomposer, SatelliteTile
+from xyo_bound_witness import XYOBoundWitnessMesh
 
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s [%(levelname)s] %(message)s'
 )
-logger = logging.getLogger("E14Live")
+logger = logging.getLogger("E14Oracle")
 
-# E14 LIVE CONFIGURATION
+# E14 CONFIGURATION
 ARIES_POINT = 0.0
 INSOLATION_EQUILIBRIUM = 0.075
 HEAT_TOLERANCE = 0.005
 PHASE_PULLBACK = 0.95
 HEAT_DAMPING = 0.02
 
-# DECISION THRESHOLDS
 K_THRESHOLD = 0.99
 CPU_MIN = 10
 MEMORY_MIN = 15
 DISK_MIN = 20
 
-# 14 ENGINES (LIVE WITH DATA VERIFICATION)
 ENGINES = [f"E{i:02d}" for i in range(1, 15)]
 
-class E14LiveOracle:
-    """Production E14 Oracle with real data + XYO verification."""
+class E14OracleWitnessedGrid:
+    """E14 Oracle operating on witnessed atmospheric grid."""
     
     def __init__(self):
         # Phase convergence state
@@ -58,110 +55,74 @@ class E14LiveOracle:
             "heat": INSOLATION_EQUILIBRIUM,
         } for eng in ENGINES}
         
-        # Data ingestion & verification
-        self.bom_engine = BOMRadarIngestion()
-        self.sensor_fusion = SensorFusion()
-        self.xyo_verifier = XYODataVerification()
+        # Witnessed grid infrastructure
+        self.tile_decomposer = SatelliteTileDecomposer()
+        self.witness_mesh = XYOBoundWitnessMesh()
         
-        # Initialize local sensor array
-        self.local_sensors = LocalSensorArray(
-            location="Sydney, NSW",
-            latitude=-33.8688,
-            longitude=151.2093
-        )
-        self._init_sensors()
+        self.witnessed_tiles = []
+        self.execution_grid = {}  # Grid indexed by (lat, lon, time)
         
         # Execution tracking
-        self.history = deque(maxlen=1000)
         self.decisions = deque(maxlen=10000)
         self.start_time = time.time()
         self.execution_count = 0
         self.queue_count = 0
-        self.xyo_verified_count = 0
-        self.data_failed_count = 0
+        self.witnessed_count = 0
         
-        logger.info("[E14 ORACLE INITIALIZED — REAL DATA MODE]")
+        logger.info("[E14 ORACLE — WITNESSED ATMOSPHERIC GRID MODE]")
         logger.info(f"  Engines: {len(ENGINES)}")
-        logger.info(f"  Data sources: BOM IDR71B Radar + Local Sensors")
-        logger.info(f"  Verification: XYO witness layer")
+        logger.info(f"  Data sources: BOM, Himawari, GOES, Meteosat")
+        logger.info(f"  Verification: XYO bound-witness mesh")
         logger.info(f"  Started: {datetime.now().isoformat()}")
         logger.info("")
     
-    def _init_sensors(self):
-        """Initialize local sensor array."""
-        self.local_sensors.add_sensor(LocalSensor("TEMP_01", "temperature", 22.5, "°C"))
-        self.local_sensors.add_sensor(LocalSensor("HUMID_01", "humidity", 65.0, "%"))
-        self.local_sensors.add_sensor(LocalSensor("PRESS_01", "pressure", 1013.25, "hPa"))
-        self.local_sensors.add_sensor(LocalSensor("WIND_01", "wind_speed", 12.3, "m/s"))
-        logger.info(f"✓ Initialized {len(self.local_sensors.sensors)} local sensors")
+    def ingest_satellite_frames(self) -> List[SatelliteTile]:
+        """Ingest and decompose satellite frames."""
+        logger.info("Ingesting satellite frames...")
+        
+        tiles = []
+        for satellite in ["BOM", "Himawari"]:  # Demo: 2 satellites
+            satellite_tiles = self.tile_decomposer.decompose_satellite_frame(satellite)
+            tiles.extend(satellite_tiles)
+        
+        logger.info(f"✓ Decomposed {len(tiles)} tiles from multiple satellites")
+        return tiles
     
-    def ingest_data(self) -> bool:
-        """
-        Ingest BOM + local sensor data.
+    def witness_tiles(self, tiles: List[SatelliteTile]) -> int:
+        """Anchor tiles into XYO bound-witness mesh."""
+        logger.info("Anchoring tiles into witness mesh...")
         
-        Returns True if data successfully ingested.
-        """
-        try:
-            # Fetch BOM radar data
-            bom_data = self.bom_engine.fetch_radar_data()
-            if not bom_data:
-                logger.warning("Failed to fetch BOM data")
-                return False
-            
-            # Update local sensors (simulate new readings)
-            self.local_sensors.update_sensor("TEMP_01", 22.5 + (time.time() % 5) / 10)
-            self.local_sensors.update_sensor("HUMID_01", 65.0 + (time.time() % 10) / 5)
-            
-            # Fuse data
-            self.sensor_fusion.add_bom_data(bom_data)
-            self.sensor_fusion.add_local_sensors(self.local_sensors)
-            fused = self.sensor_fusion.fuse()
-            
-            if not fused:
-                logger.warning("Failed to fuse data")
-                return False
-            
-            logger.info(f"✓ Data ingested: {fused['fusion_id']}")
-            return True
+        witnessed = 0
+        for tile in tiles:
+            witnesses = self.witness_mesh.witness_tile(tile)
+            if witnesses:
+                self.witnessed_tiles.append(tile)
+                witnessed += len(witnesses)
         
-        except Exception as e:
-            logger.error(f"Data ingestion error: {e}")
-            return False
+        self.witnessed_count += witnessed
+        logger.info(f"✓ Witnessed {witnessed} tiles anchored to ledger")
+        return witnessed
     
-    def verify_data(self) -> bool:
-        """
-        Verify ingested data with XYO witness layer.
+    def build_execution_grid(self):
+        """Build spatial-temporal grid from witnessed tiles."""
+        logger.info("Building execution grid from witnessed tiles...")
         
-        Returns True if data passes verification.
-        """
-        try:
-            fused = self.sensor_fusion.get_fused_data()
-            if not fused:
-                logger.warning("No fused data to verify")
-                self.data_failed_count += 1
-                return False
-            
-            data_hash = self.sensor_fusion.get_data_hash()
-            
-            # Witness the data
-            witness = self.xyo_verifier.witness_data(data_hash, fused)
-            
-            # Verify the witness
-            is_verified = self.xyo_verifier.verify_witness(witness)
-            
-            if is_verified:
-                self.xyo_verified_count += 1
-                logger.info("✓ DATA VERIFIED by XYO witness layer")
-                return True
-            else:
-                self.data_failed_count += 1
-                logger.error("✗ DATA VERIFICATION FAILED")
-                return False
+        for tile in self.witnessed_tiles:
+            grid_key = (
+                tile.latitude_min,
+                tile.longitude_min,
+                tile.timestamp[:10]
+            )
+            self.execution_grid[grid_key] = {
+                "tile_id": tile.tile_id,
+                "satellite": tile.satellite,
+                "band": tile.band,
+                "region": tile.region,
+                "integrity_hash": tile.integrity_hash,
+                "witnessed": True,
+            }
         
-        except Exception as e:
-            logger.error(f"Verification error: {e}")
-            self.data_failed_count += 1
-            return False
+        logger.info(f"✓ Execution grid built: {len(self.execution_grid)} cells")
     
     def get_phase_diff(self, a, b):
         """Circular phase distance."""
@@ -169,7 +130,7 @@ class E14LiveOracle:
         return min(d, 86400.0 - d)
     
     def compute_k_score(self):
-        """Live K-score from phase convergence."""
+        """K-score from phase convergence."""
         ratios = []
         
         for axis, tol in [("tick", 25), ("beat", 50), ("breath", 100), ("cycle", 200)]:
@@ -187,7 +148,7 @@ class E14LiveOracle:
         return k ** (1.0 / len(ratios))
     
     def get_system_resources(self):
-        """Live system resources."""
+        """System resources."""
         return {
             "cpu_headroom": 100.0 - psutil.cpu_percent(interval=0.05),
             "memory_headroom": 100.0 - psutil.virtual_memory().percent,
@@ -195,7 +156,7 @@ class E14LiveOracle:
         }
     
     def update_engines(self):
-        """Update 14 engines toward convergence."""
+        """Update engines toward convergence."""
         for eng in self.state:
             for axis in ["tick", "beat", "breath", "cycle"]:
                 current = self.state[eng][axis]
@@ -208,26 +169,26 @@ class E14LiveOracle:
         """Check execution conditions."""
         k = self.compute_k_score()
         resources = self.get_system_resources()
-        data_verified = self.verify_data()
+        grid_ready = len(self.execution_grid) > 0
         
         conditions = {
             "k_score": k >= K_THRESHOLD,
             "cpu": resources["cpu_headroom"] > CPU_MIN,
             "memory": resources["memory_headroom"] > MEMORY_MIN,
             "disk": resources["disk_headroom"] > DISK_MIN,
-            "data_verified": data_verified,
+            "witnessed_grid": grid_ready,
         }
         
         return all(conditions.values()), {
             "k": k,
             "resources": resources,
             "conditions": conditions,
-            "data_verified": data_verified,
+            "grid_cells": len(self.execution_grid),
             "timestamp": datetime.now().isoformat(),
         }
     
     def execute(self, operation_id, operation_func):
-        """Execute operation if all conditions met."""
+        """Execute operation if conditions met."""
         can_exec, details = self.can_execute()
         
         result = {
@@ -236,7 +197,7 @@ class E14LiveOracle:
             "k_score": details["k"],
             "resources": details["resources"],
             "conditions": details["conditions"],
-            "data_verified": details["data_verified"],
+            "grid_cells": details["grid_cells"],
             "executed": False,
         }
         
@@ -246,7 +207,7 @@ class E14LiveOracle:
                 result["executed"] = True
                 result["status"] = "EXECUTED"
                 self.execution_count += 1
-                logger.info(f"✓ EXECUTED: {operation_id} (K={details['k']:.4f}, Data verified)")
+                logger.info(f"✓ EXECUTED: {operation_id} (K={details['k']:.4f}, Grid={details['grid_cells']} cells)")
             except Exception as e:
                 result["error"] = str(e)
                 result["status"] = "EXECUTION_FAILED"
@@ -260,7 +221,7 @@ class E14LiveOracle:
         self.decisions.append(result)
         return result
     
-    def get_status(self):
+    def get_status(self) -> Dict:
         """Get system status."""
         k = self.compute_k_score()
         resources = self.get_system_resources()
@@ -272,12 +233,12 @@ class E14LiveOracle:
             "k_score": round(k, 4),
             "resources": {k: round(v, 1) for k, v in resources.items()},
             "executable": can_exec,
-            "data_verified": details.get("data_verified", False),
+            "grid_cells": len(self.execution_grid),
+            "witnessed_tiles": len(self.witnessed_tiles),
             "stats": {
                 "executed": self.execution_count,
                 "queued": self.queue_count,
-                "data_verified": self.xyo_verified_count,
-                "data_failed": self.data_failed_count,
+                "total_witnessed": self.witnessed_count,
             }
         }
 
@@ -289,13 +250,20 @@ def example_operation():
     """Example operation."""
     return {"status": "success", "timestamp": datetime.now().isoformat()}
 
-def run_live():
-    """Run E14 Oracle live."""
-    oracle = E14LiveOracle()
+def run_oracle():
+    """Run E14 Oracle on witnessed grid."""
+    oracle = E14OracleWitnessedGrid()
     
-    logger.info("[E14 LIVE ORACLE — REAL DATA + VERIFICATION MODE]")
-    logger.info("Pipeline: BOM IDR71B → Sensor Fusion → XYO Verify → E14 Execute")
+    logger.info("[E14 ORACLE — WITNESSED ATMOSPHERIC GRID]")
+    logger.info("Pipeline: Satellite frames → Tile decomposition → XYO witness mesh → E14 execution")
     logger.info("Press Ctrl+C to stop")
+    logger.info("")
+    
+    # Initial grid setup
+    logger.info("[SETUP] Building witnessed grid...")
+    tiles = oracle.ingest_satellite_frames()
+    oracle.witness_tiles(tiles)
+    oracle.build_execution_grid()
     logger.info("")
     
     cycle = 0
@@ -303,10 +271,7 @@ def run_live():
         try:
             cycle += 1
             
-            # Ingest data
-            oracle.ingest_data()
-            
-            # Update phase convergence
+            # Update convergence
             oracle.update_engines()
             
             # Try to execute
@@ -318,8 +283,8 @@ def run_live():
                 logger.info(f"")
                 logger.info(f"[Status] K={status['k_score']:.4f} | "
                            f"Executed={status['stats']['executed']} | "
-                           f"Verified={status['stats']['data_verified']} | "
-                           f"Failed={status['stats']['data_failed']}")
+                           f"Grid cells={status['grid_cells']} | "
+                           f"Witnessed tiles={status['witnessed_tiles']}")
             
             time.sleep(1)
         
@@ -328,9 +293,9 @@ def run_live():
             logger.info("[SHUTDOWN]")
             logger.info(f"Executed: {oracle.execution_count}")
             logger.info(f"Queued: {oracle.queue_count}")
-            logger.info(f"Data verified: {oracle.xyo_verified_count}")
-            logger.info(f"Data failed: {oracle.data_failed_count}")
+            logger.info(f"Total witnessed: {oracle.witnessed_count}")
+            logger.info(f"Grid cells: {len(oracle.execution_grid)}")
             break
 
 if __name__ == "__main__":
-    run_live()
+    run_oracle()
