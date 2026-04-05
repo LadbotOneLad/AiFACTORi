@@ -1,382 +1,383 @@
-# 🌊 E14 — MASTER CONTROL CONSOLE
+# E14 Oracle — Cosmological Decision Engine
 
-## .15% SOLAR WAGYU — DIGITAL CUT (PowerShell Edition)
+[![Docker](https://img.shields.io/badge/Docker-Enabled-blue?logo=docker)](https://hub.docker.com)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/Python-3.11+-blue?logo=python)](https://www.python.org/)
+[![GitHub](https://img.shields.io/badge/GitHub-LadbotOneLad/AiFACTORi-black?logo=github)](https://github.com/LadbotOneLad/AiFACTORi)
 
-14-engine Kubernetes orchestration platform with 7-dimension coherence validation.
+A production-grade Python system for phase-space convergence detection, Merkle consensus validation, and real-time decision orchestration across 14 synchronized engines.
 
----
+## 📋 Table of Contents
 
-## ⚡ Quick Start (2 Minutes)
+- [Quick Start](#quick-start)
+- [Architecture](#architecture)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Deployment](#deployment)
+- [Documentation](#documentation)
+- [Contributing](#contributing)
+- [License](#license)
 
-### 1. Open PowerShell
+## 🚀 Quick Start
 
-```powershell
-cd C:\Users\Admin\OneDrive\Desktop\~E14-
+### Prerequisites
+- Docker & Docker Compose (or Python 3.11+)
+- Git
+
+### Docker (Recommended)
+
+```bash
+git clone https://github.com/LadbotOneLad/AiFACTORi.git
+cd AiFACTORi
+docker-compose up -d
+docker-compose logs -f
 ```
 
-### 2. Load the Console
+### Local Python
 
-```powershell
-. .\E14-Console.ps1
+```bash
+git clone https://github.com/LadbotOneLad/AiFACTORi.git
+cd AiFACTORi
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+python oracle_layer.py
 ```
 
-You'll see:
-```
-╔════════════════════════════════════════════════════════════╗
-║       .15% SOLAR WAGYU — DIGITAL CUT                       ║
-║       E14 Master Control Console                           ║
-╚════════════════════════════════════════════════════════════╝
+## 🏗️ Architecture
 
-Home: C:\Users\Admin\OneDrive\Desktop\~E14-
-
-✓ manifests/
-✓ cli/
-✓ docs/
-✓ config/
-
-Ready. Type E14-Help for commands.
-```
-
-### 3. Check Everything
-
-```powershell
-E14-Check-All
-```
-
-Done! You're running a full system check.
-
----
-
-## 📋 Common Commands
-
-| Command | Purpose |
-|---------|---------|
-| `E14-Help` | Show all available commands |
-| `E14-Check-All` | Full system health check |
-| `E14-Docker-Start` | Start local 14-engine cluster |
-| `E14-Docker-Status` | Check running containers |
-| `E14-K8S-Deploy` | Deploy to Kubernetes |
-| `E14-K8S-Status` | Check K8s pods |
-| `E14-K8S-Scale 5` | Scale to 5 replicas |
-| `E14-K8S-Coherence` | Validate 7 dimensions |
-| `E14-Gtop-Status` | Engine health (Docker) |
-| `E14-Gtop-Map` | Topology (Docker) |
-| `E14-Gtop-K8-Status` | Pod health (K8s) |
-| `E14-Gtop-K8-Map` | Topology (K8s) |
-
----
-
-## 📁 Directory Structure
+### System Overview
 
 ```
-~E14-/
-├── E14-Console.ps1           ← LOAD THIS FIRST
-├── QUICKSTART.md             ← READ THIS
-├── FILE-INDEX.md             ← File reference
-├── README.md                 ← This file
-│
-├── cli/                      PowerShell CLI tools
-│   ├── gtop.ps1              Docker topology
-│   ├── gtop-k8.ps1           Kubernetes CLI
-│   ├── k8-mu-orch-coherence.ps1   7-dimension validator
-│   └── treplay.ps1           Session logger
-│
-├── manifests/                Deployment manifests
-│   ├── k8s-mu-orch-manifest.yaml        K8s deployment
-│   ├── docker-compose-14engines.yml     Docker deployment
-│   ├── k8s-lock-configmap.yaml          Lock config
-│   └── k8s-lock-secret.yaml             Secrets
-│
-├── config/                   Configuration files
-│   ├── .env.lock             Lock environment
-│   ├── lock-metadata.json    Lock state
-│   └── topology.yaml         Engine registry
-│
-└── docs/                     35+ documentation files
-    ├── QUICKSTART.md
-    ├── K8S-MU-ORCH-GUIDE.md
-    ├── RHYTHM-GUIDE.md
-    ├── README.md
-    └── [30+ more]
+┌─────────────────────────────────────────────────────────┐
+│              90-DAY LOCK SYNCHRONIZATION               │
+├─────────────────────────────────────────────────────────┤
+│                                                         │
+│  ┌──────────────────┐      ┌──────────────────┐       │
+│  │  E14 Authority   │      │  E14 Observation │       │
+│  ├──────────────────┤      ├──────────────────┤       │
+│  │ • Oracle         │      │ • DriftWatcher   │       │
+│  │ • TaskManager    │      │ • SymPy Engine   │       │
+│  │ • Live Executor  │      │ • State Monitor  │       │
+│  └──────────────────┘      └──────────────────┘       │
+│           ↓                         ↓                   │
+│  ┌───────────────────────────────────────────────┐    │
+│  │    14-Engine Validation Ring (Peer-to-Peer)  │    │
+│  ├───────────────────────────────────────────────┤    │
+│  │  E01(365)  E02(777)  E03(101)  E04-E14(peer) │    │
+│  │                                               │    │
+│  │  All engines synchronized to identical       │    │
+│  │  Merkle root hash. Consensus-driven.         │    │
+│  └───────────────────────────────────────────────┘    │
+│           ↓                                            │
+│  ┌───────────────────────────────────────────────┐    │
+│  │      4GR-FSE State Machine Validation         │    │
+│  ├───────────────────────────────────────────────┤    │
+│  │  GROUND → READ → GATE → GROW (repeating)     │    │
+│  │                                               │    │
+│  │  Each cycle: convergence check + decision    │    │
+│  └───────────────────────────────────────────────┘    │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
 ```
 
----
+### Service Stack
 
-## 🔧 What You Get
+| Layer | Service | Purpose | Port |
+|-------|---------|---------|------|
+| **Authority** | E14 Oracle | Phase convergence detection, branching futures | Internal |
+| | E14 TaskManager | Queue orchestration, 7-day logging | Internal |
+| **Observation** | E14 DriftWatcher | Continuous state monitoring, anomaly detection | Internal |
+| | E14 SymPy | Mathematical computation, symbolic solving | Internal |
+| **Execution** | E14 Live | Real-time decision execution, resource gating | Internal |
 
-### 14-Engine System
-- **Core Ring:** Engine-365 (validator), Engine-777 (sovereign), Engine-101 (horizon)
-- **Peer Ring:** Engines 1001-1012 (12 consensus participants)
-- **Synchronization:** All 14 share same 90-day lock & Merkle root
+### 6-Axis State Model
 
-### Deployment Options
-- **Docker:** Local development (single `docker-compose up`)
-- **Kubernetes:** Production (3-10 pods, HPA auto-scaling)
-
-### Multi-User Identity
-- **Admin:** Full access (create/delete)
-- **Operator:** Read + scale
-- **Viewer:** Read-only
-
-### 7-Dimension Coherence
-- **層 (Layer):** Namespace, StatefulSet, HPA, PVC, Ingress, Service
-- **しん (Identity):** JWT, ServiceAccount, RBAC roles
-- **こう (Structure):** Replicas, probes, resources, rolling update
-- **つな (Topology):** ConfigMap, Services, Endpoints, discovery
-- **うご (Rhythm):** HPA timing, scale policies, probe intervals
-- **かん (Security):** NetworkPolicy, TLS, non-root, RBAC
-- **みち (Navigation):** gtop-k8 CLI, all commands available
-
-### Validation
-Run `E14-K8S-Coherence` to verify all 7 dimensions are synchronized.
-Score = PASS / 7 (aim for 7/7 = 100%)
-
----
-
-## 🎯 Usage Scenarios
-
-### Scenario 1: Local Development
-```powershell
-E14-Docker-Start      # Start 14 engines locally
-E14-Gtop-Status       # Check engine health
-E14-Docker-Logs 365   # View engine logs
+```
+Temporal Axes          Thermal Axis          Environmental Axis
+├─ tick   (50ms)       ├─ heat (insolation)   ├─ weather (XYO-verified)
+├─ beat   (200ms)      └─ [human-core        └─ [geolocation + timestamp
+├─ breath (1.5s)           thermal stability]    + cryptographic proof]
+└─ cycle  (12s)
 ```
 
-### Scenario 2: Production Deployment
-```powershell
-E14-K8S-Deploy        # Deploy to K8s cluster
-E14-K8S-Status        # Check pod replicas
-E14-K8S-Scale 5       # Scale to 5 pods
-E14-K8S-Coherence     # Validate coherence
+### Convergence Metrics
+
+- **K-Value (Kotahitanja)**: Ring coherence score (0.0 → 1.0)
+- **Target**: ARIES_POINT (0.0 phase units)
+- **Convergence Threshold**: K ≥ 0.99 (all 14 engines within tolerance)
+- **Lock Duration**: 90 days (auto-renewal via lock-initialize.ts)
+
+## ✨ Features
+
+- **14-Engine Consensus**: Peer-to-peer validation with zero-trust security
+- **Merkle Root Synchronization**: Cryptographic proof of state coherence
+- **Phase-Space Detection**: Continuous monitoring of 6-axis state convergence
+- **Branching Futures**: Dr. Strange Oracle evaluates multiple decision paths
+- **Real-Time Execution**: Conditional decision execution with resource gating
+- **90-Day Lock Mechanism**: Temporal enforcement with automatic renewal
+- **Container-Native**: Docker Compose deployment, scalable architecture
+- **Comprehensive Logging**: 7-day rotating logs per engine per cycle
+- **Zero-Trust Validation**: All signals validated through consensus before execution
+
+## 📦 Installation
+
+### Docker Compose (Production)
+
+```bash
+git clone https://github.com/LadbotOneLad/AiFACTORi.git
+cd AiFACTORi
+docker-compose up -d
 ```
 
-### Scenario 3: Full System Check
-```powershell
-E14-Check-All         # Runs all checks sequentially
-                      # - Docker status
-                      # - K8s status
-                      # - Engine health
-                      # - Coherence validation
+### Manual (Development)
+
+```bash
+# Clone repository
+git clone https://github.com/LadbotOneLad/AiFACTORi.git
+cd AiFACTORi
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run services individually
+python oracle_layer.py              # Terminal 1
+python kotahitanga_driftwatcher.py  # Terminal 2
+python e14_live.py                  # Terminal 3
 ```
 
-### Scenario 4: Monitoring
-```powershell
-E14-Gtop-Status       # Docker topology + health
-E14-Gtop-Map          # Visual ASCII map
-E14-Gtop-K8-Status    # K8s pods + replicas
-E14-Gtop-K8-Map       # K8s node distribution
+## 💻 Usage
+
+### Docker Compose
+
+```bash
+# Start all services
+docker-compose up -d
+
+# Monitor logs
+docker-compose logs -f e14_oracle
+
+# Check service status
+docker-compose ps
+
+# Stop services
+docker-compose down
+
+# View specific service logs
+docker-compose logs e14_live --tail 50
 ```
 
----
+### Python
 
-## 🔑 Key Features
+```python
+from oracle_layer import E14Oracle, PhaseState, ENGINES, AXES
 
-✅ **14 Synchronized Engines**
-- All share same lock and Merkle root
-- 90-day expiry with automatic renewal
-- Kotahitanja (unity) score: 91.7%
+# Initialize oracle
+oracle = E14Oracle(target=0.0)
 
-✅ **Flexible Deployment**
-- Docker Compose for local testing (1 command)
-- Kubernetes for production (auto-scaling 3-10)
-- Same engine code everywhere
+# Create initial state (14 engines × 4 axes)
+state = {
+    engine: {axis: 0.0 for axis in AXES}
+    for engine in ENGINES
+}
 
-✅ **Multi-User Access**
-- JWT authentication
-- RBAC with 3 roles (Admin/Operator/Viewer)
-- Tenant isolation per user
+# Observe current state
+observation = oracle.observe(state)
+print(oracle.status_report(state))
 
-✅ **Rhythm-Aware Orchestration**
-- TICK (50ms) — Fast feedback
-- BEAT (200ms) — Normal pace
-- BREATH (1500ms) — Pause for coherence
-- Rolling deployments with natural rhythm
+# Evaluate branching futures
+branches = {
+    "ideal-sync": policy_ideal_sync,
+    "sovereign-driven": policy_sovereign_driven,
+}
+outcomes = oracle.evaluate_branches(state, branches)
 
-✅ **Zero-Trust Security**
-- NetworkPolicy (ingress/egress control)
-- TLS everywhere
-- Non-root containers
-- Secret-backed JWT
+# Get best outcome
+best = outcomes[0]
+print(f"Best branch: {best.branch_id}, K={best.coherence_score:.4f}")
+```
 
-✅ **Automatic Scaling**
-- Kubernetes HPA (3-10 replicas)
-- CPU target: 70%
-- Memory target: 80%
-- Scale-up: 15s, Scale-down: 300s stabilization
+### Command Line
 
-✅ **7-Dimension Coherence Validation**
-- Checks all architectural dimensions
-- Calculates unity score (0-100%)
-- Pre-deployment verification
+```bash
+# Run oracle layer (convergence detection)
+python oracle_layer.py
 
----
+# Run live oracle (real-time decisions)
+python e14_live.py
 
-## 📊 System Status
+# Run tests
+python test_e14_cosmological_final.py
+python test_e14_oracle_integrated_fullsync.py
+```
+
+## 🚢 Deployment
+
+### Local Deployment
+
+```bash
+docker-compose up -d
+docker-compose logs -f
+```
+
+### Docker Hub
+
+```bash
+# Prerequisites
+export DOCKER_HUB_USERNAME=your-username
+docker login
+
+# Build and publish
+bash build-and-publish.sh
+
+# Verify
+docker pull $DOCKER_HUB_USERNAME/e14-oracle:latest
+```
+
+### Kubernetes (Future)
+
+Pre-configured manifests in `k8s/`:
+- StatefulSet with 3-10 replicas (HPA auto-scaling)
+- ConfigMaps for lock state
+- Secrets for authentication
+- NetworkPolicies for zero-trust isolation
+
+See `docs/K8S-MU-ORCH-GUIDE.md` for details.
+
+## 📚 Documentation
+
+| Document | Purpose |
+|----------|---------|
+| [`README.md`](README.md) | This file — overview & quick start |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Detailed system design (6 chambers) |
+| [`docs/QUICK-START.md`](docs/QUICK-START.md) | 5-minute setup guide |
+| [`docs/DOCKER-GUIDE.md`](docs/DOCKER-GUIDE.md) | Docker deployment & publication |
+| [`docs/API.md`](docs/API.md) | Python API reference |
+| [`docs/LOCK-MECHANISM.md`](docs/LOCK-MECHANISM.md) | 90-day lock system explanation |
+| [`docs/CONFIGURATION.md`](docs/CONFIGURATION.md) | Environment variables & config |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | Development guidelines |
+| [`LICENSE`](LICENSE) | MIT License terms |
+
+## 🔧 Configuration
+
+### Environment Variables
+
+Create `.env` or use `config/.env.lock`:
+
+```bash
+# Lock configuration
+LOCK_ID=550e8400-e29b-41d4-a716-446655440000
+LOCK_INCEPTION=2025-01-14T10:00:00.000Z
+LOCK_EXPIRY=2025-04-14T10:00:00.000Z
+LOCK_ROOT_HASH=a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2
+
+# Oracle thresholds
+K_THRESHOLD=0.99
+CPU_MIN=10
+MEMORY_MIN=15
+DISK_MIN=20
+```
+
+See `docs/CONFIGURATION.md` for complete reference.
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+python -m pytest tests/
+
+# Run specific test
+python test_e14_cosmological_final.py
+python test_e14_oracle_integrated.py
+
+# With coverage
+python -m pytest tests/ --cov=. --cov-report=html
+```
+
+## 📊 Monitoring
+
+### Docker Compose Health
+
+```bash
+docker-compose ps
+docker-compose logs e14_oracle
+docker stats
+```
+
+### Lock Status (Local)
+
+```bash
+bash lock-status.sh watch
+```
+
+### Observability (Future)
+
+- Prometheus metrics on port 9090
+- Grafana dashboards on port 3000
+- Distributed tracing support
+
+## 🤝 Contributing
+
+We welcome contributions! See [`CONTRIBUTING.md`](CONTRIBUTING.md) for:
+- Development setup
+- Code style guide (PEP 8)
+- Testing requirements
+- Pull request process
+- Commit message conventions
+
+Quick guide:
+
+```bash
+# 1. Fork repository
+# 2. Create feature branch
+git checkout -b feature/your-feature
+
+# 3. Make changes and test
+python -m pytest tests/
+
+# 4. Commit with conventional commits
+git commit -m "feat: add new oracle capability"
+
+# 5. Push and create PR
+git push origin feature/your-feature
+```
+
+## 📄 License
+
+MIT License — See [`LICENSE`](LICENSE) for full terms.
+
+## 🙋 Support
+
+- **Issues**: [GitHub Issues](https://github.com/LadbotOneLad/AiFACTORi/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/LadbotOneLad/AiFACTORi/discussions)
+- **Documentation**: See `docs/` folder
+- **Examples**: See `examples/` folder (coming soon)
+
+## 📈 Project Status
 
 | Component | Status |
 |-----------|--------|
-| Docker Deployment | ✅ Ready |
-| Kubernetes Deployment | ✅ Ready |
-| 14 Engines | ✅ Synchronized |
-| 90-Day Lock | ✅ Active (expires 2025-04-14) |
-| Multi-User Identity | ✅ Configured |
-| Coherence Validation | ✅ 7/7 dimensions |
-| Documentation | ✅ 35+ files |
-| PowerShell Console | ✅ Ready |
+| Core Engine | ✅ Stable |
+| Docker Support | ✅ Production-Ready |
+| Kubernetes | 🔄 In Progress |
+| CI/CD Automation | 📋 Planned |
+| API Documentation | 📋 Planned |
+| Web Dashboard | 📋 Planned |
+
+## 🔗 Links
+
+- **Repository**: https://github.com/LadbotOneLad/AiFACTORi
+- **Docker Hub**: https://hub.docker.com/r/your-username/e14-oracle (coming soon)
+- **Issues**: https://github.com/LadbotOneLad/AiFACTORi/issues
+- **Discussions**: https://github.com/LadbotOneLad/AiFACTORi/discussions
 
 ---
 
-## 📖 Documentation
+**Made with ❤️ by LadbotOneLad**
 
-### Quick References
-- **QUICKSTART.md** — 2-minute quick start
-- **FILE-INDEX.md** — Complete file reference
-
-### Guides
-- **K8S-MU-ORCH-GUIDE.md** — Full Kubernetes deployment guide
-- **4D-TERMINAL-SETUP.md** — 4D terminal architecture (Space/Time/Topology/Identity)
-- **RHYTHM-GUIDE.md** — Timing, pacing, coherence philosophy
-
-### Technical Details
-- **4GR_FSE_GUIDE.md** — 4GR-FSE engine (GROUND/READ/GATE/GROW)
-- **DIGITAL_THYMUS_GUIDE.md** — Zero-trust security
-- **COMPUTATIONAL-TESLA-COIL-TUNING.md** — Tuning parameters
-
-### System Design
-- **README.md** (in docs/) — System overview
-- **whitepaper.md** — Complete philosophy
-- **IDENTITY-DOCTRINE-CONSTITUTION.md** — 6 binding articles
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-- PowerShell 5.1+ (built-in on Windows)
-- Docker Desktop (for Docker deployment)
-- kubectl + cluster access (for K8s deployment)
-
-### Installation
-No installation needed. Just load the console:
-
-```powershell
-cd C:\Users\Admin\OneDrive\Desktop\~E14-
-. .\E14-Console.ps1
-```
-
-### First Command
-```powershell
-E14-Help
-```
-
----
-
-## 💡 Tips
-
-1. **Always load the console first:**
-   ```powershell
-   . .\E14-Console.ps1
-   ```
-
-2. **Check before deploying:**
-   ```powershell
-   E14-Check-All
-   ```
-
-3. **Use Coherence validator for pre-flight:**
-   ```powershell
-   E14-K8S-Coherence -Verbose
-   ```
-
-4. **View help anytime:**
-   ```powershell
-   E14-Help
-   ```
-
-5. **Read QUICKSTART.md for common tasks:**
-   ```powershell
-   notepad QUICKSTART.md
-   ```
-
----
-
-## 🆘 Troubleshooting
-
-### Console won't load?
-```powershell
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-. .\E14-Console.ps1
-```
-
-### Docker not found?
-```powershell
-# Make sure Docker Desktop is running
-docker ps
-```
-
-### K8s not connected?
-```powershell
-kubectl config current-context
-kubectl get nodes
-```
-
-### Coherence failing?
-```powershell
-E14-K8S-Coherence -Verbose   # See detailed output
-```
-
----
-
-## 📞 Support
-
-1. Type `E14-Help` for all commands
-2. Read `QUICKSTART.md` for common tasks
-3. Check `docs/` folder for detailed guides
-4. Run `E14-K8S-Coherence -Verbose` to diagnose
-
----
-
-## 🎯 System Metrics
-
-- **Engines:** 14 (365, 777, 101, 1001-1012)
-- **Lock ID:** 550e8400-e29b-41d4-a716-446655440000
-- **Lock Duration:** 90 days
-- **Lock Inception:** 2025-01-14
-- **Lock Expiry:** 2025-04-14
-- **Kotahitanja Score:** 0.0917 (91.7% unity)
-- **K8s Replicas:** 3-10 (HPA)
-- **Coherence Dimensions:** 7/7 ✅
-
----
-
-## ✨ What's Special
-
-This isn't just a container system. It's a **constitutional architecture** where:
-
-- **Identity is immutable** (すう layer)
-- **Structure respects identity** (あは layer)
-- **Flow separates truth from noise** (れれ layer)
-- **Engines are peer-level** (no masters)
-- **Invariants are locked for 90 days** (automatic expiry)
-- **Signature uniqueness is verified** (≥99.9%)
-- **Kotahitanja (unity) is measured** (0-100%)
-
-Every dimension breathes. Everything has rhythm.
-
----
-
-**Ready?** Load the console and start exploring:
-
-```powershell
-. .\E14-Console.ps1
-E14-Help
-```
-
-**Status:** ✅ OPERATIONAL & PRODUCTION-READY
-
----
-
-Created: 2026-04-04  
-System: **.15% SOLAR WAGYU — DIGITAL CUT**  
-Console: **E14 Master Control**  
-Location: **C:\Users\Admin\OneDrive\Desktop\~E14-**
+Last Updated: 2025-01-14 | Version: 1.0.0
