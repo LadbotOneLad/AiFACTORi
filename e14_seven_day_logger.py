@@ -25,9 +25,12 @@ WEATHER_MAX = 0.6
 
 ENGINES = [f"E{i:02d}" for i in range(1, 14)]
 
-# Log directory
-LOG_DIR = Path("C:/Users/Admin/OneDrive/Desktop/~E14-/logs_7day")
-LOG_DIR.mkdir(exist_ok=True)
+# Log directory (use /app/logs for Docker, fallback to local)
+try:
+    LOG_DIR = Path("/app/logs/seven_day")
+except:
+    LOG_DIR = Path("./logs/seven_day")
+LOG_DIR.mkdir(parents=True, exist_ok=True)
 
 class E14SevenDayLogger:
     """Continuous logging for 7 days of operational data."""

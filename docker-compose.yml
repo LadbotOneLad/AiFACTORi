@@ -4,12 +4,18 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: e14_oracle
-    command: ["python3", "oracle_layer.py"]
+    command: ["python3", "oracle_service.py", "--interval", "0.5"]
     restart: unless-stopped
     env_file: ./config/.env.lock
     volumes:
       - ./config:/app/config:ro
       - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import requests; requests.get('http://localhost:8888/health', timeout=2)" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
     logging:
       driver: "json-file"
       options:
@@ -21,12 +27,18 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: e14_driftwatcher
-    command: ["python3", "kotahitanga_driftwatcher.py"]
+    command: ["python3", "kotahitanga_driftwatcher.py", "--interval", "0.2"]
     restart: unless-stopped
     env_file: ./config/.env.lock
     volumes:
       - ./config:/app/config:ro
       - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import psutil; print('ok')" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
     logging:
       driver: "json-file"
       options:
@@ -44,23 +56,12 @@ services:
     volumes:
       - ./config:/app/config:ro
       - ./logs:/app/logs
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "100m"
-        max-file: "3"
-
-  e14_sympy:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: e14_sympy
-    command: ["python3", "kotahitanga_sympy.py"]
-    restart: unless-stopped
-    env_file: ./config/.env.lock
-    volumes:
-      - ./config:/app/config:ro
-      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import psutil; print('ok')" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
     logging:
       driver: "json-file"
       options:
@@ -78,6 +79,12 @@ services:
     volumes:
       - ./config:/app/config:ro
       - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import psutil; print('ok')" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
     logging:
       driver: "json-file"
       options:
