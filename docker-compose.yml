@@ -76,6 +76,10 @@ services:
     command: ["python3", "e14_live.py"]
     restart: unless-stopped
     env_file: ./config/.env.lock
+    environment:
+      - XYO_ADDRESS=466e84dfcbfbae8d50ad4276e8f2b5d37e8834a8
+      - XYO_NETWORK=mainnet
+      - XYO_CONSENSUS_REQUIREMENT=3
     volumes:
       - ./config:/app/config:ro
       - ./logs:/app/logs
