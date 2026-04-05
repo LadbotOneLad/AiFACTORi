@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   e14_oracle:
     build:
@@ -12,14 +10,6 @@ services:
     volumes:
       - ./config:/app/config:ro
       - ./logs:/app/logs
-    networks:
-      - e14_net
-    healthcheck:
-      test: ["CMD", "python3", "-c", "import time; print('oracle_ok')"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 5s
     logging:
       driver: "json-file"
       options:
@@ -37,17 +27,6 @@ services:
     volumes:
       - ./config:/app/config:ro
       - ./logs:/app/logs
-    networks:
-      - e14_net
-    depends_on:
-      e14_oracle:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "python3", "-c", "import time; print('driftwatcher_ok')"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 5s
     logging:
       driver: "json-file"
       options:
@@ -65,19 +44,6 @@ services:
     volumes:
       - ./config:/app/config:ro
       - ./logs:/app/logs
-    networks:
-      - e14_net
-    depends_on:
-      e14_oracle:
-        condition: service_healthy
-      e14_driftwatcher:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "python3", "-c", "import time; print('taskmanager_ok')"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 5s
     logging:
       driver: "json-file"
       options:
@@ -95,14 +61,6 @@ services:
     volumes:
       - ./config:/app/config:ro
       - ./logs:/app/logs
-    networks:
-      - e14_net
-    healthcheck:
-      test: ["CMD", "python3", "-c", "import sympy; print('sympy_ok')"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 5s
     logging:
       driver: "json-file"
       options:
@@ -120,32 +78,8 @@ services:
     volumes:
       - ./config:/app/config:ro
       - ./logs:/app/logs
-    networks:
-      - e14_net
-    depends_on:
-      e14_oracle:
-        condition: service_healthy
-      e14_sympy:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "python3", "-c", "import psutil; print('live_ok')"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 5s
     logging:
       driver: "json-file"
       options:
         max-size: "100m"
         max-file: "3"
-
-networks:
-  e14_net:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16
-
-volumes:
-  e14_logs:
-    driver: local
