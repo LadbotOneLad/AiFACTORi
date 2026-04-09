@@ -1,0 +1,15 @@
+{
+  "engine_name": "weather-oracle",
+  "protocol_version": "1.0.0",
+  "engine_version": "1.0.0",
+  "network_scope": "global",
+  "compatibility": {
+    "min_supported_protocol": "1.0.0",
+    "max_supported_protocol": "1.x.x"
+  },
+  "identity": {
+    "description": "Deterministic weather oracle engine with protocol-governed witness and hash path.",
+    "authority": "C:\\Users\\ai\\Desktop\\weather\\protocol",
+    "instance_role": "oracle-node"
+  }
+}

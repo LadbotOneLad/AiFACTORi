@@ -1,0 +1,18 @@
+{
+  "hash_algorithm": "sha3-256",
+  "normalization": {
+    "string_encoding": "utf-8",
+    "object_key_order": "lexicographic",
+    "number_format": "canonical-json"
+  },
+  "field_order": [
+    "tile_id",
+    "timestamp_utc",
+    "location.lat",
+    "location.lon",
+    "source",
+    "payload"
+  ],
+  "hash_of": "concatenated_normalized_fields",
+  "output_format": "hex"
+}

@@ -1,0 +1,23 @@
+{
+  "cycle_name": "weather_sync_cycle",
+  "tick_unit": "seconds",
+  "tick_length": 900,
+  "max_drift_seconds": 5,
+  "phases": [
+    "ingest",
+    "normalize",
+    "tile",
+    "hash",
+    "witness",
+    "commit"
+  ],
+  "invariants": {
+    "monotonic_cycle_id": true,
+    "no_rewrite_after_commit": true,
+    "hash_path_stable": true
+  },
+  "network_rules": {
+    "allow_partial_nodes": true,
+    "require_witness_for_commit": true
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "tile_type": "weather_observation",
+  "version": "1.0.0",
+  "fields": [
+    {
+      "name": "tile_id",
+      "type": "string",
+      "required": true,
+      "description": "Globally unique tile identifier."
+    },
+    {
+      "name": "timestamp_utc",
+      "type": "string",
+      "format": "iso8601",
+      "required": true
+    },
+    {
+      "name": "location",
+      "type": "object",
+      "required": true,
+      "fields": [
+        { "name": "lat", "type": "number", "required": true },
+        { "name": "lon", "type": "number", "required": true }
+      ]
+    },
+    {
+      "name": "source",
+      "type": "string",
+      "required": true,
+      "description": "Data source identifier (e.g. BOM, NASA, sensor-id)."
+    },
+    {
+      "name": "payload",
+      "type": "object",
+      "required": true,
+      "description": "Raw or normalized weather data payload."
+    }
+  ],
+  "constraints": {
+    "unique_tile_id": true,
+    "timestamp_must_be_utc": true
+  }
+}

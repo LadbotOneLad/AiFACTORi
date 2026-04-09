@@ -1,0 +1,25 @@
+{
+  "witness_type": "weather_oracle_witness",
+  "version": "1.0.0",
+  "proves": [
+    "tile_schema_valid",
+    "hash_path_correct",
+    "cycle_membership_valid",
+    "source_declared"
+  ],
+  "inputs_required": [
+    "tile",
+    "cycle_id",
+    "hash_path_definition",
+    "engine_version"
+  ],
+  "verification_rules": {
+    "reject_on_schema_violation": true,
+    "reject_on_hash_mismatch": true,
+    "reject_on_unknown_protocol_version": true
+  },
+  "network_behavior": {
+    "witness_signature_required": false,
+    "witness_log_to_ledger": true
+  }
+}
