@@ -15,4 +15,4 @@ K = 1.00 ? VERIFIED
 Requirements:
 - obey lock cycle
 - obey wobble constants
-- enforce structural invariants
+- enforce structural invariants (I1, I2, I3).

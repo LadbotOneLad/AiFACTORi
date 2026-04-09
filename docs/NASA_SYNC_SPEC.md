@@ -19,7 +19,7 @@ Consensus rule:
 All 14 engines must match ? K = 1.00
 
 Normalization:
-- lock cycle
-- wobble constants
-- hashing order
-- tile size
+- obey lock cycle
+- obey wobble constants
+- fixed tile size
+- deterministic hashing order.
