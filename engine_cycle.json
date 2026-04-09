@@ -1,6 +1,1 @@
-﻿{
-  "witness_key": "SAT_A_SK",
-  "lock_id": "2026-CYCLE-01",
-  "lock_inception": "2026-04-07T00:00:00Z",
-  "lock_expiry": "2026-07-07T00:00:00Z"
-}
+{"engine_ids":["E01","E02","E03","E04","E05","E06","E07","E08","E09","E10","E11","E12","E13","E14"], "cycle_length":14}
