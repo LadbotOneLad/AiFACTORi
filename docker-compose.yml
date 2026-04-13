@@ -1,0 +1,96 @@
+services:
+  e14_oracle:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: e14_oracle
+    command: ["python3", "oracle_service.py", "--interval", "0.5"]
+    restart: unless-stopped
+    env_file: ./config/.env.lock
+    volumes:
+      - ./config:/app/config:ro
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import psutil; print('ok')" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+
+  e14_driftwatcher:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: e14_driftwatcher
+    command: ["python3", "kotahitanga_driftwatcher.py", "--interval", "0.2"]
+    restart: unless-stopped
+    env_file: ./config/.env.lock
+    volumes:
+      - ./config:/app/config:ro
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import psutil; print('ok')" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+
+  e14_taskmanager:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: e14_taskmanager
+    command: ["python3", "e14_seven_day_logger.py"]
+    restart: unless-stopped
+    env_file: ./config/.env.lock
+    volumes:
+      - ./config:/app/config:ro
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import psutil; print('ok')" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+
+  e14_live:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: e14_live
+    command: ["python3", "e14_live.py"]
+    restart: unless-stopped
+    env_file: ./config/.env.lock
+    environment:
+      - XYO_ADDRESS=466e84dfcbfbae8d50ad4276e8f2b5d37e8834a8
+      - XYO_NETWORK=mainnet
+      - XYO_CONSENSUS_REQUIREMENT=3
+    volumes:
+      - ./config:/app/config:ro
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import psutil; print('ok')" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"

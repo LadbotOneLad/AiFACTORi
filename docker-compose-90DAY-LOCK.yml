@@ -1,0 +1,59 @@
+services:
+
+  oracle:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: e14_oracle
+    command: ["python3", "oracle_layer.py"]
+    restart: unless-stopped
+    volumes:
+      - .:/app
+
+  driftwatcher:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: e14_driftwatcher
+    command: ["python3", "kotahitanga_driftwatcher.py"]
+    restart: unless-stopped
+    volumes:
+      - .:/app
+    depends_on:
+      - oracle
+
+  taskmanager:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: e14_taskmanager
+    command: ["python3", "e14_seven_day_logger.py"]
+    restart: unless-stopped
+    volumes:
+      - .:/app
+    depends_on:
+      - oracle
+      - driftwatcher
+
+  sympy_engine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: e14_sympy
+    command: ["python3", "kotahitanga_sympy.py"]
+    restart: unless-stopped
+    volumes:
+      - .:/app
+
+  live_engine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: e14_live
+    command: ["python3", "e14_live.py"]
+    restart: unless-stopped
+    volumes:
+      - .:/app
+    depends_on:
+      - oracle
+      - sympy_engine

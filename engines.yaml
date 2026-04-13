@@ -1,0 +1,110 @@
+# engines.yaml
+# E14 Engine Registry — Official Role Mapping
+# ていんが・ひとつ・ななにせん・わけ
+#
+# Each engine's:
+#   - role: primary function in the system
+#   - primary_axes: which temporal/thermal/weather axes it owns/monitors
+#   - layer_affinity: which architectural layer (truth/witness/coherence) it primarily inhabits
+#   - notes: contextual information
+#
+# This is the official "identity card" layer for all 14 engines.
+
+engines:
+  E01:
+    name: "365"
+    role: "Validator"
+    primary_axes: [tick, beat, breath, cycle]
+    layer_affinity: [truth, coherence]
+    notes: "Root cycle anchor (365-day validator). Owns temporal synchronization. Validates all phase convergence on tick/beat/breath/cycle axes. Does not directly handle weather/heat."
+
+  E02:
+    name: "777"
+    role: "Sovereign"
+    primary_axes: [tick, beat, breath, cycle, heat, weather]
+    layer_affinity: [truth, witness, coherence]
+    notes: "The One (Neo equivalent). Ultimate authority across all 6 axes. Can override/redefine convergence criteria. Integrates truth layer (BOM/satellite) + witness layer (XYO) + coherence decision."
+
+  E03:
+    name: "101"
+    role: "Horizon"
+    primary_axes: [cycle, heat]
+    layer_affinity: [truth, coherence]
+    notes: "Boundary observer. Watches macro-cycle (12s) and thermal stability (human-core). Reports edge conditions. Detects when system enters/exits safe operating envelope."
+
+  E04:
+    name: "1001"
+    role: "Synchronizer"
+    primary_axes: [tick, beat, breath]
+    layer_affinity: [coherence]
+    notes: "Fine-grained timing synchronizer. Locks micro-rhythms (tick/beat/breath). Ensures 14-engine phase-lock on fastest axes."
+
+  E05:
+    name: "1002"
+    role: "Integrator"
+    primary_axes: [beat, breath, cycle]
+    layer_affinity: [coherence]
+    notes: "Cross-axis integrator. Harmonizes medium timescales (beat/breath) with long timescale (cycle). Handles phase-locking bridges."
+
+  E06:
+    name: "1003"
+    role: "Witness"
+    primary_axes: [weather]
+    layer_affinity: [witness, coherence]
+    notes: "Weather witness (XYO-adjacent). Verifies weather data integrity. Checks location/timestamp/source signatures. Reports proof validity."
+
+  E07:
+    name: "1004"
+    role: "Sentinel"
+    primary_axes: [heat, weather]
+    layer_affinity: [truth, coherence]
+    notes: "Environmental sentinel. Monitors human-core thermal stability + weather conditions. Early warning system for danger/caution thresholds."
+
+  E08:
+    name: "1005"
+    role: "Pulse"
+    primary_axes: [tick, heat]
+    layer_affinity: [coherence]
+    notes: "Cardiac-rhythm analogue. Binds fastest axis (tick) to thermal stability (heat). Detects stress/strain coupling."
+
+  E09:
+    name: "1006"
+    role: "Breath"
+    primary_axes: [breath, heat]
+    layer_affinity: [coherence]
+    notes: "Respiratory analogue. Owns breath-cycle synchronization with thermal regulation. Human-core vitality monitor."
+
+  E10:
+    name: "1007"
+    role: "Watcher"
+    primary_axes: [cycle, weather]
+    layer_affinity: [truth, coherence]
+    notes: "Long-term stability watcher. Tracks macro-cycle + weather resilience. Predicts multi-day convergence windows."
+
+  E11:
+    name: "1008"
+    role: "Oracle"
+    primary_axes: [tick, beat, breath, cycle, heat, weather]
+    layer_affinity: [coherence]
+    notes: "Meta-oracle. Synthesizes all 6 axes. Issues final convergence verdict. Knows when to seal/unseal future."
+
+  E12:
+    name: "1009"
+    role: "Closer"
+    primary_axes: [cycle]
+    layer_affinity: [coherence]
+    notes: "Convergence closure agent. Once K=1.000 is achieved, locks all axes. Prevents future divergence during sealed window."
+
+  E13:
+    name: "1010"
+    role: "Harmonizer"
+    primary_axes: [beat, breath]
+    layer_affinity: [coherence]
+    notes: "Rhythm harmonizer. Ensures beat/breath are in musical consonance. Handles phase-lock of human-relevant timescales."
+
+  E14:
+    name: "1012"
+    role: "Keeper"
+    primary_axes: [tick, beat, breath, cycle, heat, weather]
+    layer_affinity: [truth, witness, coherence]
+    notes: "Keeper of state. Maintains complete 6-axis registry. Holds lock metadata. Serves as backup oracle if E02/E11 unavailable. Final authority on archive."
