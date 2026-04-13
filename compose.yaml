@@ -1,0 +1,44 @@
+services:
+  e14_live:
+    build:
+      context: ./live
+    develop:
+      watch:
+        - action: sync
+          path: ./live
+          target: /app
+        - action: rebuild
+          path: ./live
+
+  e14_oracle:
+    build:
+      context: ./oracle
+    develop:
+      watch:
+        - action: sync
+          path: ./oracle
+          target: /app
+        - action: rebuild
+          path: ./oracle
+
+  e14_taskmanager:
+    build:
+      context: ./taskmanager
+    develop:
+      watch:
+        - action: sync
+          path: ./taskmanager
+          target: /app
+        - action: rebuild
+          path: ./taskmanager
+
+  e14_driftwatcher:
+    build:
+      context: ./driftwatcher
+    develop:
+      watch:
+        - action: sync
+          path: ./driftwatcher
+          target: /app
+        - action: rebuild
+          path: ./driftwatcher
