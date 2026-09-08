@@ -26,7 +26,6 @@ wheels/
 *.egg
 .pytest_cache/
 .coverage
-.env
 .venv
 venv/
 ENV/
@@ -34,12 +33,13 @@ node_modules/
 npm-debug.log
 .vscode
 .idea
-*.log
 *.swp
 *.swo
 *~
-.DS_Store
 cli/
 manifests/
 E14-Console.ps1
 *.ps1
+logs/
+*.tmp
+.cache

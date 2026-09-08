@@ -1,151 +1,39 @@
-version: '3.9'
-
 services:
-  e14_oracle:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: e14_oracle
-    command: ["python3", "oracle_layer.py"]
+  mqtt_broker:
+    image: eclipse-mosquitto:latest
+    container_name: mqtt_broker
     restart: unless-stopped
-    env_file: ./config/.env.lock
+    ports:
+      - "1883:1883"
+      - "9001:9001"
     volumes:
-      - ./config:/app/config:ro
-      - ./logs:/app/logs
-    networks:
-      - e14_net
-    healthcheck:
-      test: ["CMD", "python3", "-c", "import time; print('oracle_ok')"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 5s
+      - ./config/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - ./logs/mosquitto:/mosquitto/log
     logging:
       driver: "json-file"
       options:
         max-size: "100m"
         max-file: "3"
 
-  e14_driftwatcher:
+  esp32_bridge:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: e14_driftwatcher
-    command: ["python3", "kotahitanga_driftwatcher.py"]
+    container_name: esp32_bridge
+    command: ["python3", "esp32_bridge.py"]
     restart: unless-stopped
-    env_file: ./config/.env.lock
-    volumes:
-      - ./config:/app/config:ro
-      - ./logs:/app/logs
-    networks:
-      - e14_net
     depends_on:
-      e14_oracle:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "python3", "-c", "import time; print('driftwatcher_ok')"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 5s
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "100m"
-        max-file: "3"
-
-  e14_taskmanager:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: e14_taskmanager
-    command: ["python3", "e14_seven_day_logger.py"]
-    restart: unless-stopped
+      - mqtt_broker
     env_file: ./config/.env.lock
+    environment:
+      - MQTT_BROKER=mqtt_broker
+      - MQTT_PORT=1883
+      - MQTT_TOPIC=esp32/sensors/#
+      - XYO_ENDPOINT=http://localhost:8004/seal
     volumes:
-      - ./config:/app/config:ro
       - ./logs:/app/logs
-    networks:
-      - e14_net
-    depends_on:
-      e14_oracle:
-        condition: service_healthy
-      e14_driftwatcher:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "python3", "-c", "import time; print('taskmanager_ok')"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 5s
     logging:
       driver: "json-file"
       options:
         max-size: "100m"
         max-file: "3"
-
-  e14_sympy:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: e14_sympy
-    command: ["python3", "kotahitanga_sympy.py"]
-    restart: unless-stopped
-    env_file: ./config/.env.lock
-    volumes:
-      - ./config:/app/config:ro
-      - ./logs:/app/logs
-    networks:
-      - e14_net
-    healthcheck:
-      test: ["CMD", "python3", "-c", "import sympy; print('sympy_ok')"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 5s
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "100m"
-        max-file: "3"
-
-  e14_live:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: e14_live
-    command: ["python3", "e14_live.py"]
-    restart: unless-stopped
-    env_file: ./config/.env.lock
-    volumes:
-      - ./config:/app/config:ro
-      - ./logs:/app/logs
-    networks:
-      - e14_net
-    depends_on:
-      e14_oracle:
-        condition: service_healthy
-      e14_sympy:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "python3", "-c", "import psutil; print('live_ok')"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 5s
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "100m"
-        max-file: "3"
-
-networks:
-  e14_net:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16
-
-volumes:
-  e14_logs:
-    driver: local
